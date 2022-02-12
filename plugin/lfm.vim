@@ -22,24 +22,24 @@
 " WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
-" ================ Lf =======================
-if exists('g:lf_command_override')
-  let s:lf_command = g:lf_command_override
+" ================ Lfm =======================
+if exists('g:lfm_command_override')
+  let s:lfm_command = g:lfm_command_override
 else
-  let s:lf_command = 'lf'
+  let s:lfm_command = 'lfm'
 endif
 
-function! OpenLfIn(path, edit_cmd)
+function! OpenLfmIn(path, edit_cmd)
   let currentPath = shellescape(isdirectory(a:path) ? fnamemodify(expand(a:path), ":p:h") : expand(a:path))
   let s:edit_cmd = a:edit_cmd
   if exists(":FloatermNew")
-    exec 'FloatermNew' . ' --height=' . string(get(g:, 'lf_height', g:floaterm_height)) . ' --width=' . string(get(g:, 'lf_width', g:floaterm_width)) . ' ' . s:lf_command . ' ' . currentPath
+    exec 'FloatermNew' . ' --height=' . string(get(g:, 'lfm_height', g:floaterm_height)) . ' --width=' . string(get(g:, 'lfm_width', g:floaterm_width)) . ' ' . s:lfm_command . ' ' . currentPath
   else
     echoerr "Failed to open a floating terminal. Make sure `voldikss/vim-floaterm` is installed."
   endif
 endfun
 
-function! LfCallback(lf_tmpfile, lastdir_tmpfile, ...) abort
+function! LfmCallback(lfm_tmpfile, lastdir_tmpfile, ...) abort
   let edit_cmd = get(s:, 'edit_cmd', 'default')
   if (edit_cmd == 'cd' || edit_cmd == 'lcd') && filereadable(a:lastdir_tmpfile)
     let lastdir = readfile(a:lastdir_tmpfile, '', 1)[0]
@@ -47,8 +47,8 @@ function! LfCallback(lf_tmpfile, lastdir_tmpfile, ...) abort
       exec edit_cmd . ' ' . lastdir
       return
     endif
-  elseif filereadable(a:lf_tmpfile)
-    let filenames = readfile(a:lf_tmpfile)
+  elseif filereadable(a:lfm_tmpfile)
+    let filenames = readfile(a:lfm_tmpfile)
     if !empty(filenames)
       if has('nvim')
         call floaterm#window#hide(bufnr('%'))
@@ -66,41 +66,41 @@ function! LfCallback(lf_tmpfile, lastdir_tmpfile, ...) abort
 endfunction
 
 " For backwards-compatibility (deprecated)
-if exists('g:lf_open_new_tab') && g:lf_open_new_tab
+if exists('g:lfm_open_new_tab') && g:lfm_open_new_tab
   let s:default_edit_cmd='tabedit'
 else
   let s:default_edit_cmd='edit'
 endif
 
-command! Lfcd call OpenLfIn(".", 'cd')
-command! Lflcd call OpenLfIn(".", 'lcd')
-command! LfCurrentFile call OpenLfIn("%", s:default_edit_cmd)
-command! LfCurrentDirectory call OpenLfIn("%:p:h", s:default_edit_cmd)
-command! LfWorkingDirectory call OpenLfIn(".", s:default_edit_cmd)
-command! Lf LfCurrentFile
+command! Lfmcd call OpenLfmIn(".", 'cd')
+command! Lfmlcd call OpenLfmIn(".", 'lcd')
+command! LfmCurrentFile call OpenLfmIn("%", s:default_edit_cmd)
+command! LfmCurrentDirectory call OpenLfmIn("%:p:h", s:default_edit_cmd)
+command! LfmWorkingDirectory call OpenLfmIn(".", s:default_edit_cmd)
+command! Lfm LfmCurrentFile
 
 " To open the selected file in a new tab
-command! LfCurrentFileNewTab call OpenLfIn("%", 'tabedit')
-command! LfCurrentFileExistingOrNewTab call OpenLfIn("%", 'tab drop')
-command! LfCurrentDirectoryNewTab call OpenLfIn("%:p:h", 'tabedit')
-command! LfCurrentDirectoryExistingOrNewTab call OpenLfIn("%:p:h", 'tab drop')
-command! LfWorkingDirectoryNewTab call OpenLfIn(".", 'tabedit')
-command! LfWorkingDirectoryExistingOrNewTab call OpenLfIn(".", 'tab drop')
-command! LfNewTab LfCurrentDirectoryNewTab
+command! LfmCurrentFileNewTab call OpenLfmIn("%", 'tabedit')
+command! LfmCurrentFileExistingOrNewTab call OpenLfmIn("%", 'tab drop')
+command! LfmCurrentDirectoryNewTab call OpenLfmIn("%:p:h", 'tabedit')
+command! LfmCurrentDirectoryExistingOrNewTab call OpenLfmIn("%:p:h", 'tab drop')
+command! LfmWorkingDirectoryNewTab call OpenLfmIn(".", 'tabedit')
+command! LfmWorkingDirectoryExistingOrNewTab call OpenLfmIn(".", 'tab drop')
+command! LfmNewTab LfmCurrentDirectoryNewTab
 
 " For retro-compatibility
-function! OpenLf()
-  Lf
+function! OpenLfm()
+  Lfm
 endfunction
 
-" To open lf when vim load a directory
-if exists('g:lf_replace_netrw') && g:lf_replace_netrw
-  augroup ReplaceNetrwByLfVim
+" To open lfm when vim load a directory
+if exists('g:lfm_replace_netrw') && g:lfm_replace_netrw
+  augroup ReplaceNetrwByLfmVim
     autocmd VimEnter * silent! autocmd! FileExplorer
-    autocmd BufEnter * let s:buf_path = expand("%") | if isdirectory(s:buf_path) | bdelete! | call timer_start(100, {->OpenLfIn(s:buf_path, s:default_edit_cmd)}) | endif
+    autocmd BufEnter * let s:buf_path = expand("%") | if isdirectory(s:buf_path) | bdelete! | call timer_start(100, {->OpenLfmIn(s:buf_path, s:default_edit_cmd)}) | endif
   augroup END
 endif
 
-if !exists('g:lf_map_keys') || g:lf_map_keys
-  map <leader>f :Lf<CR>
+if !exists('g:lfm_map_keys') || g:lfm_map_keys
+  map <leader>f :Lfm<CR>
 endif

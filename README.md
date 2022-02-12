@@ -1,84 +1,82 @@
-lf.vim
+lfm.vim
 ======
 
-[lf](https://github.com/gokcehan/lf) integration in vim and neovim
-
-![lf.vim](https://user-images.githubusercontent.com/56180050/100401445-70299b00-3094-11eb-945a-7caa04de696d.png)
+[lfm](https://github.com/kmarius/lfm) integration in vim and neovim
 
 Installation
 ------------
 
 Install it with your favorite plugin manager. Example with vim-plug:
 
-        Plug 'ptzz/lf.vim'
+        Plug 'kmarius/lfm.vim'
 
 Then, add the vim-floaterm dependency:
 
         Plug 'voldikss/vim-floaterm'
 
-**Note:** lf.vim should be loaded before vim-floaterm to override vim-floaterm's lf wrapper.
+**Note:** lfm.vim should be loaded before vim-floaterm to override vim-floaterm's lfm wrapper.
 
 How to use it
 -------------
 
-The default shortcut for opening lf is `<leader>f` (\f by default).
-To disable the default key mapping, add this line in your .vimrc or init.vim: `let g:lf_map_keys = 0`.
-Then you can add a new mapping with this line: `map <leader>f :Lf<CR>`.
+The default shortcut for opening lfm is `<leader>f` (\f by default).
+To disable the default key mapping, add this line in your .vimrc or init.vim: `let g:lfm_map_keys = 0`.
+Then you can add a new mapping with this line: `map <leader>f :Lfm<CR>`.
 
-To set the floating window width and height, set `g:lf_width` and `g:lf_height` accordingly. If not found, it will default to `g:floaterm_width` and `g:floaterm_height`.
+To set the floating window width and height, set `g:lfm_width` and `g:lfm_height` accordingly. If not found, it will default to `g:floaterm_width` and `g:floaterm_height`.
 
-The command for opening lf in the current file's directory is `:Lf`.
-When opening (default 'l' and '\<right\>') a file from the lf window,
+The command for opening lfm in the current file's directory is `:Lfm`.
+When opening (default 'l' and '\<right\>') a file from the lfm window,
 vim will open the selected file in the current window. To open the selected
-file in a new tab instead use `:LfNewTab`.
+file in a new tab instead use `:LfmNewTab`.
 
-(Note that the lf `open` command is required to return to the originating vim session.
+(Note that the lfm `open` command is required to return to the originating vim session.
 E.g. the `edit` command opens a new process of $EDITOR.)
 
-For opening lf in the current workspace, run `:LfWorkingDirectory`.
+For opening lfm in the current workspace, run `:LfmWorkingDirectory`.
 Vim will open the selected file in the current window.
-`:LfWorkingDirectoryNewTab` will open the selected file in a new tab instead.
+`:LfmWorkingDirectoryNewTab` will open the selected file in a new tab instead.
 
-For changing the current directory via lf, run `:Lfcd`or run `:Lflcd` for the current window.
+For changing the current directory via lfm, run `:Lfmcd`or run `:Lfmlcd` for the current window.
 
 List of commands:
 ```vim
-" Change directory with lf via cd or lcd
-Lfcd
-Lflcd
+" Change directory with lfm via cd or lcd
+Lfmcd
+Lfmlcd
 
-Lf " Open current file by default
-LfCurrentFile " Default Lf behaviour
-LfCurrentDirectory
-LfWorkingDirectory
+Lfm " Open current file by default
+LfmCurrentFile " Default Lfm behaviour
+LfmCurrentDirectory
+LfmWorkingDirectory
 
 " Always open in new tabs
-LfNewTab
-LfCurrentFileNewTab
-LfCurrentDirectoryNewTab
-LfWorkingDirectoryNewTab
+LfmNewTab
+LfmCurrentFileNewTab
+LfmCurrentDirectoryNewTab
+LfmWorkingDirectoryNewTab
 
 " Open tab if it exists or in new tab if it does not
-LfCurrentFileExistingOrNewTab
-LfCurrentDirectoryExistingOrNewTab
-LfWorkingDirectoryExistingOrNewTab
+LfmCurrentFileExistingOrNewTab
+LfmCurrentDirectoryExistingOrNewTab
+LfmWorkingDirectoryExistingOrNewTab
 ```
 
 The old way to make vim open the selected file in a new tab was to add
-`let g:lf_open_new_tab = 1` in your .vimrc or init.vim. That way is still
+`let g:lfm_open_new_tab = 1` in your .vimrc or init.vim. That way is still
 supported but deprecated.
 
-### Opening lf instead of netrw when you open a directory
-If you want to see vim opening lf when you open a directory (ex: nvim ./dir or :edit ./dir), please add this in your .(n)vimrc.
+### Opening lfm instead of netrw when you open a directory
+If you want to see vim opening lfm when you open a directory (ex: nvim ./dir or :edit ./dir), please add this in your .(n)vimrc.
 ```vim
 let g:NERDTreeHijackNetrw = 0 " Add this line if you use NERDTree
-let g:lf_replace_netrw = 1 " Open lf when vim opens a directory
+let g:lfm_replace_netrw = 1 " Open lfm when vim opens a directory
 ```
 
-### Setting a custom lf command
-By default lf is opened with the command `lf` but you can set an other custom command by setting the `g:lf_command_override` variable in your .(n)vimrc.
+### Setting a custom lfm command
+By default lfm is opened with the command `lfm` but you can set an other custom command by setting the `g:lfm_command_override` variable in your .(n)vimrc.
 
 For instance if you want to display the hidden files by default you can write:
 ```vim
-let g:lf_command_override = 'lf -command "set hidden"'
+let g:lfm_command_override = 'lfm -command "set hidden"'
 ```
